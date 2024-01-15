@@ -122,32 +122,11 @@
 // JS Code to run the calculate whenever a value is changed
 
 // Prices are defined in integer cents to avoid floating point issues
-const AMOUNTS = {
-    "Base": {
-        "B": 76700,
-        "C": 85200,
-        "D": 93700,
-        "E": 102200
-    },
-    "EAM": {
-        "B": 4500,
-        "C": 5000,
-        "D": 5500,
-        "E": 6000
-    },
-    "PM1": {
-        "B": 13410,
-        "C": 14900,
-        "D": 16390,
-        "E": 17880
-        },
-    "PM2": {
-        "B": 9000,
-        "C": 10000,
-        "D": 11000,
-        "E": 12000
-        }
-};
+const AMOUNTS = {   
+    'Base': {'B': 80000, 'C': 88860, 'D': 97730, 'E': 106590},
+    'EAM': {'B': 4690, 'C': 5220, 'D': 5740, 'E': 6260},
+    'PM1': {'B': 13990, 'C': 15540, 'D': 17090, 'E': 18650},
+    'PM2': {'B': 9390, 'C': 10430, 'D': 11470, 'E': 12520}};
 
 function calculate() {
     // Get the chosen tuition bucket
@@ -157,7 +136,7 @@ function calculate() {
     // Update bucket option texts
     for (const b of Object.keys(AMOUNTS['Base'])) {
         e = document.getElementById(`option${b}`);
-        e.innerHTML = `Bucket ${b}: base tuition $${(AMOUNTS['Base'][b]/100).toFixed(0)}`
+        e.innerHTML = `Bucket ${b}: base tuition $${(AMOUNTS['Base'][b]/100).toFixed(2)}`
             + ` per month for 10 months ($${(AMOUNTS['Base'][b]/10).toFixed(0)} per year)`
     }
 
