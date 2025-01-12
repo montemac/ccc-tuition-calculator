@@ -123,10 +123,11 @@
 
 // Prices are defined in integer cents to avoid floating point issues
 const AMOUNTS = {   
-    'Base': {'B': 80000, 'C': 88860, 'D': 97730, 'E': 106590},
-    'EAM': {'B': 4690, 'C': 5220, 'D': 5740, 'E': 6260},
-    'PM1': {'B': 13990, 'C': 15540, 'D': 17090, 'E': 18650},
-    'PM2': {'B': 9390, 'C': 10430, 'D': 11470, 'E': 12520}};
+    'Base': {'B': 81900, 'C': 91000, 'D': 100000, 'E': 109100},
+    'EAM': {'B': 4812, 'C': 5324, 'D': 5836, 'E': 6450},
+    'PM1': {'B': 14437, 'C': 15973, 'D': 17508, 'E': 19351},
+    'PM2': {'B': 9625, 'C': 10648, 'D': 11672, 'E': 12901}};
+
 
 function calculate() {
     // Get the chosen tuition bucket
@@ -136,8 +137,8 @@ function calculate() {
     // Update bucket option texts
     for (const b of Object.keys(AMOUNTS['Base'])) {
         e = document.getElementById(`option${b}`);
-        e.innerHTML = `Bucket ${b}: base tuition $${(AMOUNTS['Base'][b]/100).toFixed(2)}`
-            + ` per month for 10 months ($${(AMOUNTS['Base'][b]/10).toFixed(0)} per year)`
+        e.innerHTML = `Bucket ${b}: base tuition $${Math.round(AMOUNTS['Base'][b]/100).toString()}`
+            + ` per month for 10 months ($${Math.round(AMOUNTS['Base'][b]/10).toString()} per year)`
     }
 
 
@@ -173,22 +174,25 @@ function calculate() {
     // Update pricing to have the right format
     for (const [key, value] of Object.entries(AMOUNTS)) {
         e = document.getElementById(`price${key}`);
-        e.value = "$" + (amounts[key] / 100).toFixed(2);
+        if (key=="Base")
+            e.value = "$" + Math.round(amounts[key] / 100).toString();
+        else
+            e.value = "$" + (amounts[key] / 100).toFixed(2);
     }
 
     // Pull the days of care selected, and calculate the final price
     let num_days = {"Base": 1};
-    let price = amounts["Base"];
+    let price_dollars = Math.round(amounts["Base"] / 100);
     for (const id of ["selectEAM", "selectPM1", "selectPM2"]) {
         e = document.getElementById(id);
         const num_days_this = parseInt(e.options[e.selectedIndex].text);
         const care_name = id.split("select")[1];
         const total_this = amounts[care_name] * num_days_this
-        price += total_this;
+        const total_this_dollars = Math.round(total_this / 100);
+        price_dollars += total_this_dollars;
         e = document.getElementById(`total${care_name}`);
-        e.value = "$" + (total_this / 100).toFixed(2);
+        e.value = "$" + total_this_dollars.toString();
     }
-    let price_dollars = price / 100;
 
     // Display the final price or error
     e = document.getElementById("calculatorResult");
@@ -197,7 +201,7 @@ function calculate() {
         e.className = "alert alert-danger";
     }
     else {
-        e.innerHTML = "Total monthly tuition payment: $" + price_dollars.toFixed(2);
+        e.innerHTML = "Total monthly tuition payment: $" + price_dollars.toString();
         e.className = "alert alert-success";
     }
 }

@@ -1,44 +1,44 @@
 # %%
 import pprint
 
-# Put old amounts here
-AMOUNTS = {
-    "Base": {
-        "B": 76700,
-        "C": 85200,
-        "D": 93700,
-        "E": 102200
-    },
-    "EAM": {
-        "B": 4500,
-        "C": 5000,
-        "D": 5500,
-        "E": 6000
-    },
-    "PM1": {
-        "B": 13410,
-        "C": 14900,
-        "D": 16390,
-        "E": 17880
-        },
-    "PM2": {
-        "B": 9000,
-        "C": 10000,
-        "D": 11000,
-        "E": 12000
-        }
-}
+BUDGET_SHEET_PASTED = """
+Bucket B
+$819
+$48.12
+$144.37
+$96.25
+Bucket C
+$910
+$53.24
+$159.73
+$106.48
+Bucket D
+$1,000
+$58.36
+$175.08
+$116.72
+Bucket E
+$1,091
+$64.50
+$193.51
+$129.01
+"""
 
-# Put multiplier here
-mult = 1.043
+# Parse copy-paste from budget into correct format
+amounts = {"Base": {}, "EAM": {}, "PM1": {}, "PM2": {}}
+current_bucket = ""
+program_cycle = ["Base", "EAM", "PM1", "PM2"]
+i = 0
+for line in BUDGET_SHEET_PASTED.strip().splitlines():
+    if line.startswith("Bucket "):
+        current_bucket = line.split()[-1]
+    else:
+        cents = int(round(float(line.removeprefix("$").replace(",",""))*100))
+        amounts[program_cycle[i]][current_bucket] = cents
+        i = (i + 1)%len(program_cycle)
 
-amounts_new = {}
-for k, v in AMOUNTS.items():
-    amounts_new[k] = {}
-    for k2, v2 in v.items():
-        # Apply multiplier and round to nearest 10
-        amounts_new[k][k2] = round(v2 * mult / 10) * 10
-
+    
 pp = pprint.PrettyPrinter(indent=4)
 
-pp.pprint(amounts_new)
+pp.pprint(amounts)
+
